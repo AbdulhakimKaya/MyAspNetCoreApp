@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@model List<Product>
+<h1>Products</h1>
+
+@if (TempData["status"] != null)
+{
+    <div class="alert alert-success text-center" role="alert">
+        @TempData["status"]  @*Bu TempData bi kere görünür aynı sayfa yenilenirse tekrar görünmez çünkü data cookie den okunur ve silinir*@
+    </div>
+}
+
+<a asp-controller="Products" asp-action="Add">Add Product</a>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Delete</th>
+        <th>Update</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Price</td>
+            <td>@item.Stock</td>
+            <td><a asp-controller="Products" asp-action="Remove" asp-route-id="@item.Id">Delete</a></td>
+            <td><a asp-controller="Products" asp-action="Update" asp-route-id="@item.Id">Update</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+

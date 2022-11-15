@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "Update";
+}
+
+@model Product
+
+<h1>Update</h1>
+
+<form asp-controller="Products" asp-action="Update" asp-route-productId="@Model.Id" method="post">
+    
+    @*<input type="hidden" asp-for="Id"/>*@ @*hybrid model kullanıldığı için yorum satırına alındı*@
+
+    <label>Product Name</label>
+    <input type="text" asp-for="Name"/>
+    <br/>
+    <label>Product Price</label>
+    <input type="text" asp-for="Price"/>
+    <br/>
+    <label>Product Stock</label>
+    <input type="text" asp-for="Stock"/>
+    <br/>
+    <label>Product Color</label>
+    <input type="text" asp-for="Color"/>
+    <br/>
+    <button type="submit">Update Product</button>
+</form>
+
+
