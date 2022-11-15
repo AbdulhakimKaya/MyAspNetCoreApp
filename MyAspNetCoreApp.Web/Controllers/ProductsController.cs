@@ -1,22 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyAspNetCoreApp.Web.Models;
 using System.Drawing;
+using MyAspNetCoreApp.Web.Helpers;
 
 namespace MyAspNetCoreApp.Web.Controllers
 {
     public class ProductsController : Controller
     {
         private AppDbContext _context;
+        private IHelper _helper;
         private readonly ProductRepository _productRepository;
 
-        public ProductsController(AppDbContext context)
+        public ProductsController(AppDbContext context, IHelper helper) // constructor injection
         {
             _productRepository = new ProductRepository();
             _context = context;
+            _helper = helper;
         }
-        public IActionResult Index()
+        public IActionResult Index([FromServices]IHelper helper2) // method injection 
         {
             //var products = _productRepository.GetAll();
+
+            var text = "Asp.Net";
+            var upperText = _helper.Upper(text);
+
+            var status = _helper.Equals(helper2);
 
             var products = _context.Products.ToList();
             var product = _context.Products.First();
@@ -59,7 +67,7 @@ namespace MyAspNetCoreApp.Web.Controllers
 
             //return View(); // get işlemi yapılırken kullanıldı
         }
-        [HttpGet]
+        [Http]
         public IActionResult Update(int id)
         {
             var product = _context.Products.Find(id);

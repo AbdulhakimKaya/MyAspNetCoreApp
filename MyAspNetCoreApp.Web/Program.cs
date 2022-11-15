@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString(
             "SqlCon"));
 });
+
+//builder.Services.AddSingleton<IHelper, Helper>();
+
+//builder.Services.AddScoped<IHelper, Helper>();
+
+//builder.Services.AddScoped<Helper>(); // interface kullanýlmak istenmediði durumlar için
+
+//builder.Services.AddTransient<IHelper, Helper>(sp =>
+//{
+//    return new Helper(true);
+//}); // Helper da bool deðer alan ctor için yapýldý
+
+builder.Services.AddTransient<IHelper, Helper>();
 
 
 var app = builder.Build();
