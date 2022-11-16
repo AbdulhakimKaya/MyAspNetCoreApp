@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyAspNetCoreApp.Web.Models;
 using System.Drawing;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyAspNetCoreApp.Web.Helpers;
 
 namespace MyAspNetCoreApp.Web.Controllers
@@ -43,6 +44,24 @@ namespace MyAspNetCoreApp.Web.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+
+            ViewBag.Expire = new Dictionary<string, int>()
+            {
+                {"1 month", 1},
+                {"3 month", 3},
+                {"6 month", 6},
+                {"12 month", 12},
+            };
+
+
+            ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
+            {
+                new(){Data = "Blue", Value = "Blue"},
+                new(){Data = "Green", Value = "Green"},
+                new(){Data = "Purple", Value = "Purple"},
+            }, "Value", "Data");
+
+
             return View();
         }
         [HttpPost]  // get işlemi yapılırken HttpGet yazıldı
@@ -67,10 +86,28 @@ namespace MyAspNetCoreApp.Web.Controllers
 
             //return View(); // get işlemi yapılırken kullanıldı
         }
-        [Http]
+        [HttpGet]
         public IActionResult Update(int id)
         {
             var product = _context.Products.Find(id);
+
+            ViewBag.ExpireValue = product.Expire;
+            ViewBag.Expire = new Dictionary<string, int>()
+            {
+                {"1 month", 1},
+                {"3 month", 3},
+                {"6 month", 6},
+                {"12 month", 12},
+            };
+
+
+            ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
+            {
+                new(){Data = "Blue", Value = "Blue"},
+                new(){Data = "Green", Value = "Green"},
+                new(){Data = "Purple", Value = "Purple"},
+            }, "Value", "Data", product.Color);
+
             return View(product);
         }
 
