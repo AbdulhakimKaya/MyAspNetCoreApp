@@ -3,16 +3,17 @@
     ViewData["Title"] = "Update";
 }
 
-@model Product
+@model ProductViewModel
 
 <h1>Update</h1>
 
 <form asp-controller="Products" asp-action="Update" method="post">
 
+    <input type="hidden" asp-for="Id"/>
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Product Name</label>
         <input class="form-control" placeholder="Product Name" asp-for="Name">
-        @*<input type="text" name="Name"/>*@ @*yandaki syntax controller daki ilk 2 yontem için kullanılır*@
+        <span class="text-danger" asp-validation-for="Name"></span>
     </div>
     <div class="mb-3">
         @*<label asp-for="Color" class="form-label">Product Color</label>
@@ -21,24 +22,29 @@
         <select class="form-select" asp-for="Color" asp-items="@ViewBag.ColorSelect">
             <option value="">Select Color</option>
         </select>
+        <span class="text-danger" asp-validation-for="Color"></span>
     </div>
     <div class="mb-3">
         <label asp-for="Price" class="form-label">Product Price</label>
         <input class="form-control" placeholder="Product Price" asp-for="Price">
+        <span class="text-danger" asp-validation-for="Price"></span>
     </div>
     <div class="mb-3">
         <label asp-for="Stock" class="form-label">Product Stock</label>
         <input class="form-control" placeholder="Product Stock" asp-for="Stock">
+        <span class="text-danger" asp-validation-for="Stock"></span>
     </div>
     <div class="form-check mb-3">
         <input class="form-check-input" asp-for="IsPublish">
         <label class="form-check-label" asp-for="IsPublish">
             Can it be published?
         </label>
+        <span class="text-danger" asp-validation-for="IsPublish"></span>
     </div>
     <div class="mb-3">
         <label asp-for="PublishDate" class="form-label">Publish Date</label>
         <input class="form-control" placeholder="Publish Date" asp-for="PublishDate">
+        <span class="text-danger" asp-validation-for="PublishDate"></span>
     </div>
 
     <span>How many month will the product be sold?</span>
@@ -60,13 +66,20 @@
             </label>
         </div>
     }
+    <span class="text-danger" asp-validation-for="Expire"></span>
 
     <div class="form-floating mt-3">
         <textarea class="form-control" placeholder="Product Description" asp-for="Description"></textarea>
         <label asp-for="Description">Product Description</label>
+        
+        <span class="text-danger" asp-validation-for="Description"></span>
     </div>
 
     <button class="btn btn-primary mt-3" type="submit">Save Product</button>
 </form>
 
-
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

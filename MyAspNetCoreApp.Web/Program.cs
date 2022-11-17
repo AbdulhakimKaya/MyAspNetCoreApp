@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.Models;
@@ -27,6 +28,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //}); // Helper da bool deðer alan ctor için yapýldý
 
 builder.Services.AddTransient<IHelper, Helper>();
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 
 var app = builder.Build();
