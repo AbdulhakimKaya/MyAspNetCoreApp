@@ -2,10 +2,12 @@
     ViewData["Title"] = "Home Page";
 
     var alert = "bu bir uyari mesajidir";
+
+    var product = new Product() { Id = 1, Name = "Chair", Price = 230, Stock = 25 };
 }
 
 @section Css
-{
+    {
     <style>
         h1 {
             font-size: 24px;
@@ -19,11 +21,11 @@
 }
 
 @section Scripts
-{
+    {
     @*İlk Derste Yapılan Örnekler*@
-@*    <script type="text/javascript">
+    @*    <script type="text/javascript">
     //alert("hoş geldin")
-        
+
     $(document).ready(function(){
         console.log("hoş geldin")
     })
@@ -34,7 +36,7 @@
     <div class="col-md-4">
         <partial name="~/PartialViews/_ProductListPartialView.cshtml" model="@ViewBag.productListPartialViewModel" />
     </div>
-    
+
     <div class="col-md-4">
         @*1.yol*@
         @await Component.InvokeAsync("ProductList", new { type = 1 })
@@ -45,6 +47,12 @@
         <vc:product-list type=1></vc:product-list>
     </div>
 </div>
+
+<italic>Asp.Net Core TagHelpers</italic>
+<product-show product="product"></product-show>
+<img src="images/lamborghini.jpg" style="width: 400px" />
+@*<image-thumbnail image-src="images/lamborghini.jpg" style="width: 400px"></image-thumbnail>*@
+<thumbnail image-src="images/lamborghini.jpg" style="width: 400px"></thumbnail>
 
 
 
@@ -73,7 +81,7 @@
     <text>bugünün tarihi: @dateTime</text>
 }
 
-<hr/>
+<hr />
 
 @*if - else koşulları*@
 @if (true)
@@ -90,7 +98,7 @@ else
     <p>yanlış</p>
 }
 
-<hr/>
+<hr />
 
 @*Donguler for - foreach - while*@
 @for (var i = 0; i < 4; i++)
@@ -98,14 +106,14 @@ else
     <p>@i</p>
 }
 
-<hr/>
+<hr />
 
 @foreach (var item in Enumerable.Range(1, 3).ToList())
 {
     <p>@alert @item</p>
 }
 
-<partial name="_MenuPartialView"/>
+<partial name="_MenuPartialView" />
 
 @*farklı bir kullanım olarak da aşağıdaki gibi kullanılabilir*@
 @await Html.PartialAsync("_MenuPartialView")
