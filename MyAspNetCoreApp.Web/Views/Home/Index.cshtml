@@ -20,15 +20,41 @@
 
 @section Scripts
 {
-    <script type="text/javascript">
+    @*İlk Derste Yapılan Örnekler*@
+@*    <script type="text/javascript">
     //alert("hoş geldin")
         
     $(document).ready(function(){
         console.log("hoş geldin")
     })
-    </script>
+    </script>*@
 }
 
+<div class="row">
+    <div class="col-md-4">
+        <partial name="~/PartialViews/_ProductListPartialView.cshtml" model="@ViewBag.productListPartialViewModel" />
+    </div>
+    
+    <div class="col-md-4">
+        @*1.yol*@
+        @await Component.InvokeAsync("ProductList", new { type = 1 })
+    </div>
+
+    <div class="col-md-4">
+        @*2.yol*@
+        <vc:product-list type=1></vc:product-list>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@*İlk Derslerde Yapılan Örnekler*@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

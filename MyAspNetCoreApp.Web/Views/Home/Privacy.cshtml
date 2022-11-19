@@ -5,4 +5,21 @@
 
 <p>Use this page to detail your site's privacy policy.</p>
 
+<div class="row">
+    <div class="col-md-4">
+        <partial name="~/PartialViews/_ProductListPartialView.cshtml" model="@ViewBag.productListPartialViewModel" />
+    </div>
+    
+    <div class="col-md-4">
+        @*1.yol*@
+        @await Component.InvokeAsync("ProductList", new { type = 2 })
+    </div>
+    
+    <div class="col-md-4">
+        @*2.yol*@
+        <vc:product-list type=2></vc:product-list>
+    </div>
+</div>
+
+@*İlk Derste Yapılan Örnekler*@
 <partial name="_MenuPartialView" />
