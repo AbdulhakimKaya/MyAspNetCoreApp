@@ -49,8 +49,35 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+// aþaðýdaki Conventional Routing yapýsý artýk pek kullanýlan bir yöntem deðil
+
+// blog/abc -> blogs controller -> article action method çalýþsýn
+//app.MapControllerRoute(
+//    name: "blogs",
+//    pattern: "blog/{*article}",
+//    defaults: new {controller="Blogs", action="Article"});
+
+//app.MapControllerRoute(
+//    name: "article",
+//    pattern: "{controller=Blogs}/{action=Article}/{name}/{id}");
+
+//app.MapControllerRoute(
+//    name: "pages",
+//    pattern: "{controller}/{action}/{page}/{pagesize}");
+
+//app.MapControllerRoute(
+//    name: "getbyid",
+//    pattern: "{controller}/{action}/{productid}");
+
+
+
+
+//tamamiyle attribute routing yapmak için kapatýldý
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers();
 
 app.Run();

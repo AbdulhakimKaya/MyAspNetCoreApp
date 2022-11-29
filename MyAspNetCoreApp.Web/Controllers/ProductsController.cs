@@ -8,6 +8,7 @@ using MyAspNetCoreApp.Web.ViewModels;
 
 namespace MyAspNetCoreApp.Web.Controllers
 {
+    [Route("[controller]/[action]")]
     public class ProductsController : Controller
     {
         private readonly IMapper _mapper;
@@ -38,6 +39,29 @@ namespace MyAspNetCoreApp.Web.Controllers
             return View(_mapper.Map<List<ProductViewModel>>(products));
         }
 
+        [Route("[controller]/[action]/{page}/{pageSize}", Name = "productPage")]
+        public IActionResult Pages(int page, int pageSize)
+        {
+            var products = _context.Products.Skip((page-1)*pageSize).Take(pageSize).ToList();
+
+            ViewBag.page = page;
+            ViewBag.pageSize = pageSize;
+
+            return View(_mapper.Map<List<ProductViewModel>>(products));
+        }
+
+        //[Route("[controller]/[action]/{productId}")]
+        //[Route("[action]/{productId}")]
+        //[Route("product/{productId}")]
+        //[Route("/product/{productId}")]
+        [Route("products/product/{productId}", Name = "product")]
+        public IActionResult GetById(int productId)
+        {
+            var product = _context.Products.Find(productId);
+            return View(_mapper.Map<ProductViewModel>(product));
+        }
+
+        [HttpGet("{id}")]
         public IActionResult Remove(int id)
         {
             //_productRepository.Remove(id);
