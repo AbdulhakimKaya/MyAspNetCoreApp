@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using MyAspNetCoreApp.Web.Filters;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.Models;
 
@@ -31,6 +32,8 @@ builder.Services.AddTransient<IHelper, Helper>();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+// filter lar request gelince devreye giriyorlar. Scoped, request response a dönüþene kadar hep ayný nesne örneðini verdiði için kullanýlýr.
+builder.Services.AddScoped<NotFoundFilter>(); 
 
 var app = builder.Build();
 

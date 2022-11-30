@@ -2,11 +2,13 @@
 using MyAspNetCoreApp.Web.Models;
 using System.Diagnostics;
 using AutoMapper;
+using MyAspNetCoreApp.Web.Filters;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.ViewModels;
 
 namespace MyAspNetCoreApp.Web.Controllers
 {
+    [LogFilter]
     [Route("[controller]/[action]")]
 
     public class HomeController : Controller
@@ -25,9 +27,9 @@ namespace MyAspNetCoreApp.Web.Controllers
             _mapper = mapper;
         }
 
-        [Route("")]
-        [Route("Home")]
-        [Route("Home/Index")]
+        [Route("/")]
+        [Route("/Home")]
+        [Route("/Home/Index")]
         public IActionResult Index()
         {
             var products = _context.Products.OrderByDescending(x => x.Id).Select(x =>
@@ -48,10 +50,13 @@ namespace MyAspNetCoreApp.Web.Controllers
             return View();
         }
 
+        [CustomExceptionFilter]
         public IActionResult Privacy()
         {
             //var text = "Asp.net";
             //var upperText = _helper.Upper(text);
+
+            throw new Exception("An error occurred with the database");
 
             var products = _context.Products.OrderByDescending(x => x.Id).Select(x =>
                 new ProductPartialViewModel()
@@ -72,9 +77,11 @@ namespace MyAspNetCoreApp.Web.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(ErrorViewModel errorViewModel)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            errorViewModel.RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+            return View(errorViewModel);
         }
 
         public IActionResult Visitor()

@@ -3,6 +3,7 @@ using MyAspNetCoreApp.Web.Models;
 using System.Drawing;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyAspNetCoreApp.Web.Filters;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.ViewModels;
 
@@ -23,6 +24,8 @@ namespace MyAspNetCoreApp.Web.Controllers
             _helper = helper;
             _mapper = mapper;
         }
+
+        [CacheResourceFilter]
         public IActionResult Index([FromServices]IHelper helper2) // method injection 
         {
             //var products = _productRepository.GetAll();
@@ -54,6 +57,8 @@ namespace MyAspNetCoreApp.Web.Controllers
         //[Route("[action]/{productId}")]
         //[Route("product/{productId}")]
         //[Route("/product/{productId}")]
+
+        [ServiceFilter(typeof(NotFoundFilter))] // filter constructor da parametre alırsa bu şekilde tanımlanır
         [Route("products/product/{productId}", Name = "product")]
         public IActionResult GetById(int productId)
         {
@@ -61,6 +66,7 @@ namespace MyAspNetCoreApp.Web.Controllers
             return View(_mapper.Map<ProductViewModel>(product));
         }
 
+        [ServiceFilter(typeof(NotFoundFilter))]
         [HttpGet("{id}")]
         public IActionResult Remove(int id)
         {
@@ -157,6 +163,8 @@ namespace MyAspNetCoreApp.Web.Controllers
 
             //return View(); // get işlemi yapılırken kullanıldı
         }
+        
+        [ServiceFilter(typeof(NotFoundFilter))]
         [HttpGet]
         public IActionResult Update(int id)
         {
