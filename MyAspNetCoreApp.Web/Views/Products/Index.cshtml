@@ -18,6 +18,7 @@
     <thead>
     <tr>
         <th>Id</th>
+        <th>Image</th>
         <th>Name</th>
         <th>Color</th>
         <th>Price</th>
@@ -32,8 +33,18 @@
     <tbody>
     @foreach (var item in Model)
     {
-        <tr>
+            <tr class="align-middle">
             <td>@item.Id</td>
+            <td>
+                    @if (!String.IsNullOrEmpty(item.ImagePath))
+                    {
+                        <img style="width: 100px; height: auto" src="/images/@(item.ImagePath)"/>
+                    }
+                    else
+                    {
+                        <img style="width: 100px; height: auto" src="/images/defaultImage.png" />
+                    }
+            </td>
             <td>@item.Name</td>
             <td>@item.Color</td>
             <td>@item.Price</td>

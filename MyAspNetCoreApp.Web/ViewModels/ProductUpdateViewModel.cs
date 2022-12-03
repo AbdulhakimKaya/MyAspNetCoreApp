@@ -4,10 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyAspNetCoreApp.Web.ViewModels
 {
-    public class ProductViewModel
+    public class ProductUpdateViewModel
     {
         public int Id { get; set; }
-        [Remote(action: "HasProductName", controller:"Products")]
         [StringLength(50, ErrorMessage = "Max length is 50")]
         [Required]
         public string Name { get; set; }

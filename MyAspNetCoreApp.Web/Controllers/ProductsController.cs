@@ -3,6 +3,7 @@ using MyAspNetCoreApp.Web.Models;
 using System.Drawing;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.FileProviders;
 using MyAspNetCoreApp.Web.Filters;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.ViewModels;
@@ -16,16 +17,18 @@ namespace MyAspNetCoreApp.Web.Controllers
         private AppDbContext _context;
         private IHelper _helper;
         private readonly ProductRepository _productRepository;
+        private readonly IFileProvider _fileProvider;
 
-        public ProductsController(AppDbContext context, IHelper helper, IMapper mapper) // constructor injection
+        public ProductsController(AppDbContext context, IHelper helper, IMapper mapper, IFileProvider fileProvider) // constructor injection
         {
             _productRepository = new ProductRepository();
             _context = context;
             _helper = helper;
             _mapper = mapper;
+            _fileProvider = fileProvider;
         }
 
-        [CacheResourceFilter]
+        //[CacheResourceFilter]
         public IActionResult Index([FromServices]IHelper helper2) // method injection 
         {
             //var products = _productRepository.GetAll();
@@ -36,6 +39,8 @@ namespace MyAspNetCoreApp.Web.Controllers
             var status = _helper.Equals(helper2);
             
             var product = _context.Products.First();
+
+
 
             var products = _context.Products.ToList();
 
@@ -119,6 +124,49 @@ namespace MyAspNetCoreApp.Web.Controllers
             {
                 ModelState.AddModelError(String.Empty, "Name can not start with letter A");
             }
+            
+            IActionResult result = null;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var product = _mapper.Map<Product>(newProduct);
+
+                    if (newProduct.Image!=null && newProduct.Image.Length>0)
+                    {
+                        var root = _fileProvider.GetDirectoryContents("wwwroot");
+
+                        var images = root.First(x => x.Name == "images");
+
+                        var randomImageName = Guid.NewGuid() + Path.GetExtension(newProduct.Image.FileName);
+
+                        var path = Path.Combine(images.PhysicalPath, randomImageName);
+
+                        using var stream = new FileStream(path, FileMode.Create);
+
+                        newProduct.Image.CopyTo(stream);
+
+                        product.ImagePath = randomImageName;
+                    }
+                    
+                    //throw new Exception("db error");
+                    _context.Products.Add(product);
+                    _context.SaveChanges();
+                    TempData["status"] = "The product has been successfully added";
+
+                    result =  RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError(String.Empty, "An error occurred while adding the product");
+                    return View();
+                }
+            }
+            else
+            {
+                result =  View();
+            }
 
             ViewBag.Expire = new Dictionary<string, int>()
             {
@@ -136,30 +184,8 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new() { Data = "Purple", Value = "Purple" },
             }, "Value", "Data");
 
+            return result;
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    //throw new Exception("db error");
-                    _context.Products.Add(_mapper.Map<Product>(newProduct));
-                    _context.SaveChanges();
-                    TempData["status"] = "The product has been successfully added";
-
-                    return RedirectToAction("Index");
-                }
-                catch (Exception)
-                {
-                    ModelState.AddModelError(String.Empty, "An error occurred while adding the product");
-                    return View();
-                }
-            }
-            else
-            {
-                return View();
-            }
-            
-            
 
             //return View(); // get işlemi yapılırken kullanıldı
         }
@@ -187,11 +213,11 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new(){Data = "Purple", Value = "Purple"},
             }, "Value", "Data", product.Color);
 
-            return View(_mapper.Map<ProductViewModel>(product));
+            return View(_mapper.Map<ProductUpdateViewModel>(product));
         }
 
         [HttpPost]
-        public IActionResult Update(ProductViewModel updateProduct)
+        public IActionResult Update(ProductUpdateViewModel updateProduct)
         {
             // hybrid model yapmak için productId parametre olarak verildi ve Update.cshtml de değişiklikler yapıldı
 
@@ -214,6 +240,23 @@ namespace MyAspNetCoreApp.Web.Controllers
                 }, "Value", "Data", updateProduct.Color);
 
                 return View();
+            }
+
+            if (updateProduct.Image != null && updateProduct.Image.Length > 0)
+            {
+                var root = _fileProvider.GetDirectoryContents("wwwroot");
+
+                var images = root.First(x => x.Name == "images");
+
+                var randomImageName = Guid.NewGuid() + Path.GetExtension(updateProduct.Image.FileName);
+
+                var path = Path.Combine(images.PhysicalPath, randomImageName);
+
+                using var stream = new FileStream(path, FileMode.Create);
+
+                updateProduct.Image.CopyTo(stream);
+
+                updateProduct.ImagePath = randomImageName;
             }
 
             _context.Products.Update(_mapper.Map<Product>(updateProduct));

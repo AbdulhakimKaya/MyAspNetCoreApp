@@ -13,7 +13,7 @@
 
 <div asp-validation-summary="All"></div> @*Bütün hatalar*@
 
-<form asp-controller="Products" asp-action="Add" method="post">
+<form asp-controller="Products" asp-action="Add" method="post" enctype="multipart/form-data">
     
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Product Name</label>
@@ -80,8 +80,13 @@
     <div class="form-floating mt-3">
         <textarea class="form-control" placeholder="Product Description" asp-for="Description"></textarea>
         <label asp-for="Description">Product Description</label>
-        
+            
         <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+
+    <div class="mt-3">
+        <label for="formFileLg" class="form-label">Product Image</label>
+        <input class="form-control form-control-lg" asp-for="Image" type="file">
     </div>
 
     <button class="btn btn-primary mt-3" type="submit">Save Product</button>

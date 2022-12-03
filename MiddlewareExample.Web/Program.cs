@@ -1,3 +1,5 @@
+using MiddlewareExample.Web.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -73,6 +75,8 @@ app.UseStaticFiles();
 //}); 
 #endregion
 
+
+app.UseMiddleware<WhiteIpAddressControlMiddleware>();
 
 app.UseRouting();
 
