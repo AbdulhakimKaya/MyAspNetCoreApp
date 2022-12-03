@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            function loadComments() {
+                $("#loading").show();
+
+                $.ajax({
+                    type: "Get",
+                    url: "/VisitorAjax/VisitorCommentList",
+                    success: function (data) {
+                        console.log(data);
+                        $("#comments").html("")
+                        $.each(data, function (index, item) {
+                            let comment = `
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${item.name}</h5>
+                                                    <h6 class="card-subtitle mb-2 text-muted">${item.date}</h6>
+                                                    <p class="card-text">${item.comment}</p>
+                                                    <a href="#" class="card-link">Card link</a>
+                                                    <a href="#" class="card-link">Another link</a>
+                                                </div>
+                                            </div>
+                                        `;
+
+                            $("#comments").append(comment);
+                        });
+                        $("#loading").hide();
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                })
+            }
+            
+            loadComments();
+
+            $("#btnSave").click(function(){
+
+                var name = $("#Name").val();
+                var comment = $("#Comment").val();
+                
+                var jsonData = {"name": name, "comment": comment};
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/VisitorAjax/SaveVisitorComment",
+                    data: jsonData,
+                    success: function(data){
+                        //alert("comment saved")
+                        loadComments();
+                    },
+                    error: function(error){
+                        console.log(error)
+                    }
+                })
+            })
+        })
+    </script>
+}
+
+<h1>Index</h1>
+
+<div class="mb-3">
+    <label for="Name" class="form-label">Name</label>
+    <input class="form-control" id="Name">
+</div>
+
+<div class="form-floating mt-3">
+    <textarea class="form-control" placeholder="Comment" id="Comment" name="Comment"></textarea>
+    <label for="Comment">Comment</label>
+</div>
+
+<button id="btnSave" type="button" class="btn btn-primary mt-3 mb-3">Submit</button>
+
+<div id="loading">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div> 
+
+<div id="comments">
+ 
+</div>

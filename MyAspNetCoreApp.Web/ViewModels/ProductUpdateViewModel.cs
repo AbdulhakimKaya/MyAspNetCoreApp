@@ -7,6 +7,7 @@ namespace MyAspNetCoreApp.Web.ViewModels
     public class ProductUpdateViewModel
     {
         public int Id { get; set; }
+        public int CategoryId { get; set; }
         [StringLength(50, ErrorMessage = "Max length is 50")]
         [Required]
         public string Name { get; set; }

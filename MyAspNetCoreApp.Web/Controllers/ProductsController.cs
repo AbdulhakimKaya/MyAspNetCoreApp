@@ -3,6 +3,7 @@ using MyAspNetCoreApp.Web.Models;
 using System.Drawing;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using MyAspNetCoreApp.Web.Filters;
 using MyAspNetCoreApp.Web.Helpers;
@@ -33,18 +34,30 @@ namespace MyAspNetCoreApp.Web.Controllers
         {
             //var products = _productRepository.GetAll();
 
-            var text = "Asp.Net";
-            var upperText = _helper.Upper(text);
+            //var text = "Asp.Net";
+            //var upperText = _helper.Upper(text);
 
-            var status = _helper.Equals(helper2);
+            //var status = _helper.Equals(helper2);
             
-            var product = _context.Products.First();
+            //var product = _context.Products.First();
 
 
+            List<ProductViewModel> products = _context.Products.Include(x => x.Category).Select(x =>
+                new ProductViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Price = x.Price,
+                    Stock = x.Stock,
+                    CategoryName = x.Category.Name,
+                    Expire = x.Expire,
+                    ImagePath = x.ImagePath,
+                    IsPublish = x.IsPublish,
+                    PublishDate = x.PublishDate,
+                }).ToList();
 
-            var products = _context.Products.ToList();
-
-            return View(_mapper.Map<List<ProductViewModel>>(products));
+            return View(products);
         }
 
         [Route("[controller]/[action]/{page}/{pageSize}", Name = "productPage")]
@@ -102,6 +115,8 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new(){Data = "Purple", Value = "Purple"},
             }, "Value", "Data");
 
+            var categories = _context.Category.ToList();
+            ViewBag.CategorySelect = new SelectList(categories, "Id", "Name");
 
             return View();
         }
@@ -168,6 +183,9 @@ namespace MyAspNetCoreApp.Web.Controllers
                 result =  View();
             }
 
+            var categories = _context.Category.ToList();
+            ViewBag.CategorySelect = new SelectList(categories, "Id", "Name");
+
             ViewBag.Expire = new Dictionary<string, int>()
             {
                 {"1 month", 1},
@@ -195,6 +213,9 @@ namespace MyAspNetCoreApp.Web.Controllers
         public IActionResult Update(int id)
         {
             var product = _context.Products.Find(id);
+
+            var categories = _context.Category.ToList();
+            ViewBag.CategorySelect = new SelectList(categories, "Id", "Name",product.CategoryId);
 
             ViewBag.ExpireValue = product.Expire;
             ViewBag.Expire = new Dictionary<string, int>()
@@ -238,6 +259,9 @@ namespace MyAspNetCoreApp.Web.Controllers
                     new(){Data = "Green", Value = "Green"},
                     new(){Data = "Purple", Value = "Purple"},
                 }, "Value", "Data", updateProduct.Color);
+
+                var categories = _context.Category.ToList();
+                ViewBag.CategorySelect = new SelectList(categories, "Id", "Name",updateProduct.CategoryId);
 
                 return View();
             }

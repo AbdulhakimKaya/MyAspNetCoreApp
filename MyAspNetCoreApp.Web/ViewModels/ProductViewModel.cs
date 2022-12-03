@@ -33,6 +33,9 @@ namespace MyAspNetCoreApp.Web.ViewModels
         [ValidateNever]
         public IFormFile? Image { get; set; }
         [ValidateNever]
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
+        [Required(ErrorMessage = "Select Category")]
+        public int CategoryId { get; set; }
+        public string? CategoryName { get; set; }
     }
 }

@@ -80,8 +80,16 @@
     <div class="form-floating mt-3">
         <textarea class="form-control" placeholder="Product Description" asp-for="Description"></textarea>
         <label asp-for="Description">Product Description</label>
-            
+                
         <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+
+    <div class="mt-3">
+        <select class="form-select" asp-for="CategoryId" asp-items="@ViewBag.CategorySelect">
+            <option value="">Select Category</option>
+        </select>
+
+        <span class="text-danger" asp-validation-for="CategoryId"></span>
     </div>
 
     <div class="mt-3">
